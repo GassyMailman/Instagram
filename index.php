@@ -13,6 +13,26 @@ define('clientSecret', 'fbfc98c3740a4b7893dea4ae3862a027');
 define('redirectURI', 'http://localhost/AppAcademyAPI/index.php');
 define('ImageDirectory', 'pics/');
 
+//function that is going to connect to instagram
+function connectToInstagram($url) {
+	$ch = curl_init();
+
+	curl_setopt_array($ch, array(
+		CURLOPT_URL => $url,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_SSL_VERIFYPEER => false,
+		CURLOPT_SSL_VERIFYHOST => 2,
+	));
+	$result = curl_exec($ch);
+	curl_close($ch);
+	return $result;
+}
+
+//function to get userid cause username doesnt allow us to get pictures
+function getUserID($userName) {
+
+}
+
 if (isset($_GET['code'])) {
 	$code = ($_GET['code']);
 	$url = 'https://api.instagram.com/oauth/access_token';
@@ -28,7 +48,16 @@ if (isset($_GET['code'])) {
 	curl_setopt($curl, CURLOPT_POSTFIELDS, access_token_settings); //setting POSTFIELDS to array setup we created
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //setting equal to 1, getting strings back
 	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //work, set to true
+
+
+	$result = curl_exec($curl);
+	curl_close($curl);
+
+	$results = json_decode($result, true);
+	echo $results['user']['username'];
 }
+
+else {
 
 ?>
 
@@ -45,3 +74,7 @@ if (isset($_GET['code'])) {
 		after getting aprroval now going to have info to play with it -->
 	</body>
 </html>
+
+<?php 
+
+}
